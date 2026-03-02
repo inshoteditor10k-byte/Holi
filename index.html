@@ -1,238 +1,121 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Happy Holi In Advance</title>
-
-<!-- 🔒 MOBILE LOCK -->
-<meta name="viewport"
-content="width=360, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Holika Dahan Shubhkamnayein</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
+body{
+    margin:0;
+    font-family: 'Georgia', serif;
+    text-align:center;
+    background: linear-gradient(to bottom, #ff9933, #b30000);
+    color:white;
 }
 
-html,body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-  overflow:hidden; /* 🔒 no scroll */
-  background:#000;
-  font-family:system-ui,sans-serif;
-}
-
-/* 🔒 MOBILE FRAME */
-.app{
-  width:360px;
-  height:100vh;
-  margin:0 auto;
-  position:relative;
-  background:radial-gradient(circle at top,#ffcc33,#ff3366,#4b0082);
-  color:#fff;
-  text-align:center;
-  overflow:hidden;
-}
-
-/* CONTENT */
 .container{
-  padding:16px;
-  position:relative;
-  z-index:2;
+    padding:20px;
 }
 
-h1{
-  font-size:1.9rem;
-  text-shadow:0 0 20px yellow;
+img{
+    width:100%;
+    max-width:400px;
+    border-radius:10px;
+    box-shadow:0 0 20px yellow;
 }
 
-.from{
-  font-size:1.05rem;
-  margin-bottom:8px;
-}
-
-img.main-gif{
-  width:260px;
-  max-width:100%;
-  border-radius:16px;
-  box-shadow:0 0 20px gold;
+h2{
+    margin-top:20px;
+    font-size:22px;
+    text-shadow:2px 2px 5px black;
 }
 
 input{
-  width:100%;
-  padding:12px;
-  margin-top:14px;
-  font-size:16px;
-  border-radius:8px;
-  border:none;
+    padding:12px;
+    width:80%;
+    max-width:300px;
+    border-radius:8px;
+    border:none;
+    margin-top:20px;
+    font-size:16px;
 }
 
-/* WhatsApp button */
-.whatsapp-btn{
-  margin-top:14px;
-  padding:14px;
-  font-size:16px;
-  border:none;
-  border-radius:30px;
-  background:#25D366;
-  color:#fff;
-  font-weight:bold;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
+button{
+    padding:12px 20px;
+    margin-top:15px;
+    border:none;
+    border-radius:8px;
+    background:gold;
+    font-size:16px;
+    cursor:pointer;
 }
 
-.whatsapp-btn img{
-  width:22px;
-  height:22px;
+button:hover{
+    background:orange;
 }
-
-/* 🔥 PARTICLES */
-.particle{
-  position:absolute;
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  animation:fly 3s linear forwards;
-}
-
-@keyframes fly{
-  from{transform:translateY(0) scale(1);opacity:1}
-  to{transform:translateY(-700px) scale(0);opacity:0}
-}
-
-/* 🔒 BOTTOM AD FIX */
-.ad-bottom{
-  position:absolute;
-  bottom:0;
-  left:0;
-  width:100%;
-  height:50px;
-  display:flex;
-  justify-content:center;
-  z-index:5;
-  background:#000;
-}
-
-/* 🔒 TOP AD FIX */
-.ad-top{
-  width:100%;
-  display:flex;
-  justify-content:center;
-  background:#000;
+.footer{
+    margin-top:30px;
+    font-size:14px;
 }
 </style>
 </head>
-<script src="https://pl28652467.effectivegatecpm.com/14/02/12/14021256f7511f9cbe2ad8dbb059f64a.js"></script>
-
 <body>
 
-<div class="app">
+<div class="container">
 
-  <!-- 🔒 TOP BANNER (LOCKED) -->
-  <div class="ad-top">
-    <script>
-      atOptions = {
-        'key' : 'f3cc38102da8122bd6f22cd7b7fdbfdb',
-        'format' : 'iframe',
-        'height' : 90,
-        'width' : 728,
-        'params' : {}
-      };
-    </script>
-    <script src="https://www.highperformanceformat.com/f3cc38102da8122bd6f22cd7b7fdbfdb/invoke.js"></script>
-  </div>
+    <!-- GIF -->
+    <img src="1.gif" alt="Holika Dahan">
 
-  <!-- CONTENT -->
-  <div class="container">
-    <img src="holi.gif" class="main-gif" alt="Happy Holi">
+    <!-- Greeting Text -->
+    <h2 id="greetText"></h2>
 
-    <h1>🌸 Happy Holi In Advance 🌸</h1>
-    <script>
-  atOptions = {
-    'key' : '4f9006aaa5f2bd1ef24e3cabb9e59a1b',
-    'format' : 'iframe',
-    'height' : 50,
-    'width' : 320,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highperformanceformat.com/4f9006aaa5f2bd1ef24e3cabb9e59a1b/invoke.js"></script>
-    <div class="from" id="fromText"></div>
+    <!-- Name Input -->
+    <input type="text" id="nameInput" placeholder="Apna naam likhein">
 
-    <input id="nameInput" placeholder="Naam dalkar share karein">
+    <br>
+    <button onclick="shareNow()">Share Karein</button>
 
-    <button class="whatsapp-btn" onclick="shareNow()">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
-      WhatsApp par Share karein
-    </button>
-  </div>
-
-  <!-- 🔒 BOTTOM BANNER (LOCKED) -->
-  <div class="ad-bottom">
-    <script>
-      atOptions = {
-        'key' : '4d215d319b1b4936c2cf49c3257efaab',
-        'format' : 'iframe',
-        'height' : 50,
-        'width' : 320,
-        'params' : {}
-      };
-    </script>
-    <script src="https://www.highperformanceformat.com/4d215d319b1b4936c2cf49c3257efaab/invoke.js"></script>
-  </div>
+    <div class="footer">
+        ॐ शुभ होलिका दहन 🔥
+    </div>
 
 </div>
 
 <script>
-const params=new URLSearchParams(location.search);
-const fromName=params.get("from");
-if(fromName){
-  document.getElementById("fromText").innerHTML=
-  "🙏 Happy Holi in Advance from <b>"+decodeURIComponent(fromName)+"</b>";
-}
+// URL se naam lena
+const urlParams = new URLSearchParams(window.location.search);
+const sender = urlParams.get('name');
 
-function buildLink(name){
-  return location.origin+location.pathname+"?from="+encodeURIComponent(name);
+const greetText = document.getElementById("greetText");
+
+if(sender){
+    greetText.innerHTML = sender + " ki taraf se aapko Holika Dahan ki hardik shubhkamnayein 🔥";
+}else{
+    greetText.innerHTML = "Aapko Holika Dahan ki hardik shubhkamnayein 🔥";
 }
 
 function shareNow(){
-  const name=document.getElementById("nameInput").value.trim();
-  if(!name){alert("Pehle naam likhiye");return;}
-  const link=buildLink(name);
-  const text=`🌸 Happy Holi In Advance 🌸
+    const name = document.getElementById("nameInput").value.trim();
 
-${name} ki taraf se
-aapko advance Happy Holi 🌈
+    if(name === ""){
+        alert("Pehle apna naam likho 😊");
+        return;
+    }
 
-👇 Click karein
-${link}`;
+    const shareURL = window.location.origin + window.location.pathname + "?name=" + encodeURIComponent(name);
 
-  navigator.share({
-    title:"Happy Holi In Advance",
-    text:text,
-    url:link
-  });
+    const shareText = name + " ki taraf se Holika Dahan ki dher sari shubhkamnayein 🔥\n\nLink par click karke apna naam likhein aur apne doston ko bheje:\n" + shareURL;
+
+    if(navigator.share){
+        navigator.share({
+            title:"Holika Dahan Shubhkamnayein",
+            text: shareText
+        });
+    }else{
+        window.open("https://wa.me/?text=" + encodeURIComponent(shareText));
+    }
 }
-
-/* 🔥 3× FIRECRACKERS */
-setInterval(()=>{
-  for(let i=0;i<3;i++){
-    const p=document.createElement("div");
-    p.className="particle";
-    p.style.left=Math.random()*360+"px";
-    p.style.bottom="60px";
-    p.style.background=
-    ["red","yellow","orange","pink","cyan","lime","violet"]
-    [Math.floor(Math.random()*7)];
-    document.querySelector(".app").appendChild(p);
-    setTimeout(()=>p.remove(),3000);
-  }
-},60);
 </script>
 
 </body>
