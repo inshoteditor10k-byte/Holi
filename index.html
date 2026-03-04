@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Holika Dahan Shubhkamnayein</title>
+<title>Holi ki aapko Shubhkamnayein</title>
 
 <style>
 body{
@@ -88,7 +88,7 @@ button:hover{
     <button onclick="shareNow()">Share Karein</button>
 
     <div class="footer">
-        ॐ शुभ होलिका दहन 🔥
+        ॐ शुभ होली 🔥
     </div>
 
 </div>
@@ -116,11 +116,11 @@ function shareNow(){
 
     const shareURL = window.location.origin + window.location.pathname + "?name=" + encodeURIComponent(name);
 
-    const shareText = name + " ki taraf se Holika Dahan ki dher sari shubhkamnayein 🔥\n\nLink par click karke apna naam likhein aur apne doston ko bheje:\n" + shareURL;
+    const shareText = name + " ki taraf se Holi ki dher sari shubhkamnayein 🔥\n\nLink par click karke apna naam likhein aur apne doston ko bheje:\n" + shareURL;
 
     if(navigator.share){
         navigator.share({
-            title:"Holika Dahan Shubhkamnayein",
+            title:"Holi Shubhkamnayein",
             text: shareText
         });
     }else{
