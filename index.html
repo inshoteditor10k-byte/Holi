@@ -1,501 +1,101 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#09090f">
-<title>PayVault | Add Funds</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PayVault — Billing & Orders</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#09090f;color:#f4f4f5;font-family:system-ui,sans-serif}
-.glass{background:#20202c;border:1px solid #343449;box-shadow:0 20px 60px #0004}
-.input{width:100%;background:#0d0d16;border:1px solid #343449;border-radius:13px;padding:14px;color:white;outline:none}
-.input:focus{border-color:#8b5cf6}
-.primary{background:linear-gradient(100deg,#7c3aed,#2563eb)}
-.muted{color:#a1a1b5}
-.bonus{background:linear-gradient(120deg,#302440,#20303d);border:1px solid #51406e}
-.payment-option{display:flex;align-items:center;gap:12px;border:1px solid #343449;border-radius:13px;padding:14px;cursor:pointer;background:#11111b}
-.payment-option:has(input:checked){border-color:#8b5cf6;background:#241b38}
-.payment-option input{accent-color:#8b5cf6}
-.hidden{display:none!important}
-dialog{background:transparent;color:white;border:0;width:min(94vw,440px);padding:0;max-height:90vh}
-dialog::backdrop{background:#000b;backdrop-filter:blur(5px)}
+:root{--bg:#0a0d14;--panel:#121827;--panel2:#192235;--line:#2a3650;--txt:#f3f6ff;--muted:#a8b3c9;--accent:#76e4f7;--accent2:#a78bfa;--good:#48d597;--bad:#ff7185;--warn:#ffc96b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 10% -10%,#1b3150 0,transparent 60%),var(--bg);color:var(--txt);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial}button,input,textarea,select{font:inherit}button{border:0;cursor:pointer;border-radius:11px;padding:11px 14px;font-weight:700;background:linear-gradient(110deg,var(--accent),#a4f3dc);color:#07121a}button.secondary{background:var(--panel2);color:var(--txt);border:1px solid var(--line)}button.danger{background:#49212e;color:#ffdce2;border:1px solid #763248}button:disabled{opacity:.45;cursor:not-allowed}header{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px clamp(14px,4vw,40px);background:#0b101beF;backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:21px;letter-spacing:.3px}.logo{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0a1020;font-weight:1000}.tag{font-size:11px;padding:4px 8px;border:1px solid #745c27;border-radius:99px;color:var(--warn);white-space:nowrap}.wrap{max-width:1200px;margin:auto;padding:24px 16px 70px}.hero{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:25px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(120deg,#18263b,#15182a);margin-bottom:22px}.hero h1{font-size:clamp(25px,4vw,38px);line-height:1.1;margin:0 0 10px}.hero p,.muted{color:var(--muted)}.hero p{margin:0;max-width:650px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card,.box{background:linear-gradient(150deg,#141d2d,#101623);border:1px solid var(--line);border-radius:18px;overflow:hidden}.product-img{width:100%;height:180px;object-fit:cover;background:#202b3d}.product-body{padding:16px}.product-body h3{margin:0 0 6px}.price{font-size:21px;font-weight:850;color:var(--accent)}.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.stack{display:grid;gap:12px}.layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(290px,.8fr);gap:18px;align-items:start}.box{padding:18px}.box h2,.box h3{margin:0 0 14px}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}label{display:grid;gap:6px;color:var(--muted);font-size:13px}input,textarea,select{width:100%;border:1px solid var(--line);background:#0b111d;color:var(--txt);border-radius:10px;padding:11px 12px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--accent)}textarea{min-height:82px;resize:vertical}.full{grid-column:1/-1}.actions{display:flex;flex-wrap:wrap;gap:8px}.hide{display:none!important}.small{font-size:12px;color:var(--muted)}.notice{padding:12px;border:1px solid #42506a;background:#131f32;border-radius:12px;color:#cbd6ed}.notice.warn{border-color:#765b2b;color:#ffe1a3}.notice.good{border-color:#246a52;color:#a8f4d2}.notice.bad{border-color:#743247;color:#ffc4cf}.cart-item{padding:12px 0;border-bottom:1px solid var(--line)}.qty{display:flex;align-items:center;gap:8px}.qty button{padding:5px 10px}.pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#243149;color:#d9e7ff;font-size:12px}.admin-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}.stat{padding:14px;border-radius:13px;border:1px solid var(--line);background:#0c1422}.stat strong{display:block;font-size:22px}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:620px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted)}.qr-area{display:grid;place-items:center;padding:16px;background:white;border-radius:12px;min-height:170px}.qr-area img{max-width:220px;width:100%;height:auto}.footer{margin-top:30px;text-align:center;color:#8490a8;font-size:12px}.mobileonly{display:none}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}}
+@media(max-width:540px){header{padding:11px 12px}.brand{font-size:18px}.grid{grid-template-columns:1fr 1fr;gap:10px}.product-img{height:125px}.product-body{padding:11px}.product-body h3{font-size:14px}.product-body .price{font-size:17px}.wrap{padding:16px 11px 50px}.box{padding:14px}.fields{grid-template-columns:1fr}.statgrid{grid-template-columns:1fr 1fr}.hero{padding:18px}.desktoponly{display:none}}
 </style>
 </head>
-
-<body class="min-h-screen flex flex-col">
-
-<header class="border-b border-white/10">
-<div class="max-w-5xl mx-auto p-4 flex items-center justify-between">
-<div class="flex items-center gap-3">
-<div class="primary rounded-xl p-3 font-black">P</div>
-<div><b class="text-xl">Pay<span class="text-violet-400">Vault</span></b><p class="muted text-xs">Secure Wallet Recharge</p></div>
-</div>
-<button id="adminOpen" class="border border-white/15 rounded-xl px-3 py-2 text-sm">🔒 Admin Area</button>
-</div>
-</header>
-
-<main class="flex-1 max-w-xl w-full mx-auto px-4 py-10">
-<div class="text-center mb-7">
-<p class="text-cyan-300 text-xs tracking-widest mb-3">WALLET FUNDING PORTAL</p>
-<h1 class="text-3xl font-extrabold">Add Funds</h1>
-<p class="muted mt-2 text-sm">Recharge your wallet and check your payment status.</p>
-</div>
-
-<section class="glass rounded-3xl p-5 sm:p-7">
-<form id="paymentForm" class="space-y-5">
-
-<div>
-<label for="userId" class="block text-sm font-semibold mb-2">App User ID</label>
-<input id="userId" class="input" required maxlength="100" placeholder="Enter your App User ID">
-</div>
-
-<div>
-<label for="amount" class="block text-sm font-semibold mb-2">Enter Amount (INR)</label>
-<div class="relative">
-<span class="absolute left-4 top-3.5 muted">₹</span>
-<input id="amount" class="input pl-9" type="number" min="1" step="0.01" required placeholder="Enter amount">
-</div>
-<p class="muted text-xs mt-2">Minimum recharge: ₹1</p>
-</div>
-
-<div class="bonus rounded-2xl p-4 space-y-4">
-<div class="flex justify-between gap-3"><span class="muted">Recharge Amount</span><b id="baseAmount">₹0.00</b></div>
-<div class="flex justify-between gap-3"><span class="text-emerald-300">Extra 20% Bonus</span><b id="bonusAmount" class="text-emerald-300">+₹0.00</b></div>
-<div class="border-t border-white/10 pt-4 flex justify-between gap-3"><b>Total Wallet Value*</b><b id="totalAmount" class="text-cyan-300 text-xl">₹0.00</b></div>
-<p class="muted text-xs">*Bonus is credited only after verified payment and eligibility checks.</p>
-</div>
-
-<div>
-<p class="font-semibold mb-3">Choose Payment Method</p>
-
-<label class="payment-option mb-2">
-<input type="radio" name="method" value="upi" checked>
-<span class="text-2xl">📱</span>
-<span class="flex-1"><b>UPI Apps</b><span class="block muted text-xs">Google Pay, PhonePe, Paytm and other supported apps</span></span>
-<span class="text-xs text-emerald-300">UPI</span>
-</label>
-
-<label class="payment-option mb-2">
-<input type="radio" name="method" value="card">
-<span class="text-2xl">💳</span>
-<span class="flex-1"><b>Debit / Credit Card</b><span class="block muted text-xs">Supported cards through Razorpay</span></span>
-</label>
-
-<label class="payment-option mb-2">
-<input type="radio" name="method" value="netbanking">
-<span class="text-2xl">🏦</span>
-<span class="flex-1"><b>Net Banking</b><span class="block muted text-xs">Participating banks</span></span>
-</label>
-
-<label class="payment-option">
-<input type="radio" name="method" value="other">
-<span class="text-2xl">🔄</span>
-<span class="flex-1"><b>Other UPI / Payment Options</b><span class="block muted text-xs">View available methods in secure checkout</span></span>
-</label>
-
-<p class="muted text-xs mt-3">Available payment methods depend on Razorpay Checkout configuration, device, bank and account eligibility. Individual UPI apps are not guaranteed to appear.</p>
-</div>
-
-<div id="message" class="hidden rounded-xl p-4 text-sm break-words" role="status" aria-live="polite"></div>
-
-<button id="payButton" type="submit" class="primary w-full rounded-xl py-4 font-bold">
-Pay &amp; Claim Bonus Now →
-</button>
-
-</form>
-
-<div class="border-t border-white/10 mt-6 pt-5">
-<h2 class="font-bold">Already made a payment?</h2>
-<p class="muted text-sm mt-1 mb-4">Check the latest status directly on this website.</p>
-
-<label for="paymentId" class="block text-sm mb-2">Payment / Order ID</label>
-<input id="paymentId" class="input mb-3" placeholder="Enter your payment or order ID">
-
-<button id="checkButton" type="button" class="w-full rounded-xl border border-cyan-400/40 text-cyan-300 py-3 font-semibold">
-Check Payment Status
-</button>
-<p id="checkResult" class="muted text-sm mt-3" role="status" aria-live="polite"></p>
-</div>
+<body>
+<header><div class="brand"><span class="logo">PV</span><span id="brandName">PayVault</span><span class="tag">TEST MODE</span></div><div class="actions"><button class="secondary" id="topScanBtn">Scan Order QR</button><button class="secondary" id="adminOpenBtn">Admin</button></div></header>
+<main class="wrap">
+<section class="hero"><div><h1>Billing, orders & payments<br><span style="color:var(--accent)">in one place.</span></h1><p>Browse products, create an order, view its order QR and download an invoice. Admin can manage products and fulfil orders.</p></div><div class="actions"><button id="browseBtn">Browse products ↓</button><button class="secondary" id="viewOrderBtn">Find my order</button></div></section>
+<div id="globalNotice" class="notice hide" role="status"></div>
+<section id="shopSection"><div class="row" style="margin-bottom:14px"><div><h2 style="margin:0">Products</h2><div class="small">Prices shown in INR</div></div><button class="secondary" id="refreshProducts">Refresh</button></div><div id="productGrid" class="grid"></div></section>
+<section class="layout" style="margin-top:22px">
+<div class="box"><h2>Your cart</h2><div id="cartItems" class="stack"></div><div class="row" style="padding-top:14px"><span>Subtotal</span><strong id="cartTotal">₹0.00</strong></div><div class="small" style="margin:7px 0 16px">Final tax/total will be calculated from the current store settings.</div>
+<h3 style="margin-top:16px">Checkout details</h3><form id="checkoutForm" class="fields">
+<label>Full name<input required name="name" maxlength="100" autocomplete="name"></label>
+<label>Gmail / Email<input required type="email" name="email" maxlength="160" autocomplete="email"></label>
+<label>Mobile number<input required name="phone" type="tel" maxlength="20" autocomplete="tel"></label>
+<label>Address<input required name="address" maxlength="240" autocomplete="street-address"></label>
+<label class="full">Order notes (optional)<textarea name="notes" maxlength="500"></textarea></label>
+<div class="full stack"><div class="row"><span>Tax</span><strong id="taxAmount">₹0.00</strong></div><div class="row"><span>Total</span><strong id="checkoutTotal" class="price">₹0.00</strong></div><button id="payBtn" type="submit">Create order & continue to payment</button><div class="small">This file is a frontend. Live payment confirmation and automated email require a deployed secure backend. Test Mode does not charge real money.</div></div>
+</form></div>
+<aside class="box"><h2>Order / payment status</h2><p class="muted">After creating an order, its details appear here. Keep the Order ID for later lookup.</p><div id="orderPanel" class="stack"><div class="notice">No order selected yet.</div></div><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><h3>Find an order</h3><form id="lookupForm" class="stack"><label>Order ID<input id="lookupId" required placeholder="PV-..."></label><button class="secondary" type="submit">Look up order</button></form></aside>
 </section>
-
-<div class="grid grid-cols-3 gap-3 mt-5 text-center">
-<div class="border border-white/10 rounded-xl p-3"><div>🔐</div><span class="muted text-xs">Secure checkout</span></div>
-<div class="border border-white/10 rounded-xl p-3"><div>⚡</div><span class="muted text-xs">Quick payment</span></div>
-<div class="border border-white/10 rounded-xl p-3"><div>🎁</div><span class="muted text-xs">20% bonus</span></div>
-</div>
+<section id="adminSection" class="box hide" style="margin-top:22px"><div class="row"><div><h2>Admin console</h2><div class="small">Demo frontend controls; production access must be server-authenticated.</div></div><button class="secondary" id="adminCloseBtn">Close</button></div>
+<div id="adminLogin"><form id="adminLoginForm" class="stack" style="max-width:420px"><label>Admin password<input id="adminPassword" type="password" required autocomplete="current-password"></label><button type="submit">Unlock admin</button><div class="notice warn">Demo password: SS620631. This password is embedded in this file and is NOT secure for a public website. Replace with server-side authentication before launch.</div></form></div>
+<div id="adminApp" class="hide">
+<div class="statgrid"><div class="stat"><span class="small">Products</span><strong id="statProducts">0</strong></div><div class="stat"><span class="small">Orders</span><strong id="statOrders">0</strong></div><div class="stat"><span class="small">Completed</span><strong id="statCompleted">0</strong></div></div>
+<div class="admin-tabs"><button class="secondary" data-tab="orders">Orders</button><button class="secondary" data-tab="products">Products</button><button class="secondary" data-tab="settings">Store settings</button><button class="secondary" data-tab="backend">Backend / API</button></div>
+<div id="tab-orders" class="stack"><div class="row"><h3>Orders</h3><div class="actions"><button class="secondary" id="scanFromAdmin">Scan QR</button><button class="secondary" id="exportOrders">Export CSV</button></div></div><div class="tablewrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Payment</th><th>Order status</th><th>Actions</th></tr></thead><tbody id="ordersTable"></tbody></table></div></div>
+<div id="tab-products" class="hide stack"><h3>Add / edit product</h3><form id="productForm" class="fields"><input class="hide" name="id"><label>Product name<input required name="name" maxlength="120"></label><label>Price (₹)<input required name="price" type="number" min="0" step=".01"></label><label>Stock quantity<input required name="stock" type="number" min="0" step="1" value="0"></label><label>Image URL<input name="image" type="url" placeholder="https://..."></label><label class="full">Description<textarea name="description" maxlength="800"></textarea></label><div class="full actions"><button type="submit">Save product</button><button type="button" class="secondary" id="resetProduct">Clear</button></div></form><div class="tablewrap"><table><thead><tr><th>Product</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead><tbody id="adminProductsTable"></tbody></table></div></div>
+<div id="tab-settings" class="hide"><h3>Store settings</h3><form id="settingsForm" class="fields"><label>Store name<input name="storeName" required maxlength="100"></label><label>Currency<select name="currency"><option value="INR">INR (₹)</option></select></label><label>GST / tax rate (%)<input name="taxRate" type="number" min="0" max="100" step=".01"></label><label>Store email<input name="storeEmail" type="email"></label><label class="full">Store address<textarea name="storeAddress" maxlength="400"></textarea></label><div class="full"><button type="submit">Save settings</button></div></form></div>
+<div id="tab-backend" class="hide stack"><h3>Secure backend connection</h3><div class="notice warn">Do not paste Razorpay Secret Key or email passwords into HTML. The backend must keep secrets private, create Razorpay orders, verify payment signatures, expire unpaid orders and send emails.</div><form id="backendForm" class="fields"><label class="full">Backend API base URL<input name="apiBase" type="url" placeholder="https://your-backend.example.com"></label><label class="full">Razorpay Key ID (public/test key only)<input name="keyId" placeholder="rzp_test_..." autocomplete="off"></label><label class="full">Optional invoice / QR lookup API URL<input name="lookupApi" type="url" placeholder="https://your-backend.example.com/api/orders"></label><div class="full actions"><button type="submit">Save connection</button><button type="button" class="secondary" id="testBackend">Check backend</button></div></form><div id="backendStatus" class="notice">Backend not checked.</div><div class="small">Expected backend routes: POST /api/create-order, POST /api/verify-payment, GET /api/orders/:id, POST /api/orders/:id/complete, POST /api/orders/:id/email-invoice. Implement these securely on your server.</div></div>
+</div></section>
+<div class="footer">PayVault • Single-file frontend prototype • Protect customer data and payment secrets.</div>
 </main>
-
-<footer class="border-t border-white/10 p-5 text-center">
-<div class="flex justify-center gap-4 flex-wrap text-xs muted">
-<a href="#privacy">Privacy Policy</a>
-<a href="#terms">Terms</a>
-<a href="#refund">Refund Policy</a>
-<a href="#contact">Contact Us</a>
-</div>
-<p class="muted text-xs mt-3">© <span id="year"></span> PayVault</p>
-</footer>
-
-<dialog id="adminDialog">
-<div class="glass rounded-3xl p-6">
-<div class="flex justify-between mb-5">
-<h2 class="text-2xl font-bold">Admin Area</h2>
-<button id="adminClose" class="text-2xl">×</button>
-</div>
-
-<form id="loginForm" class="space-y-4">
-<label for="passkey" class="block text-sm">System Passkey</label>
-<input id="passkey" type="password" class="input" required>
-<button class="primary w-full rounded-xl py-3 font-bold">Unlock Admin Panel</button>
-<p id="loginMessage" class="text-sm text-red-300"></p>
-</form>
-
-<div id="adminPanel" class="hidden space-y-4 mt-4">
-<p class="muted text-xs">Configure the public Razorpay Key ID. Production admin authentication must be enforced by a trusted server.</p>
-
-<label for="keyId" class="block text-sm">Razorpay Key ID</label>
-<input id="keyId" class="input" placeholder="rzp_live_...">
-
-<label for="backendUrl" class="block text-sm">Backend Base URL</label>
-<input id="backendUrl" class="input" type="url" placeholder="https://your-server.example.com">
-
-<button id="saveConfig" class="primary w-full rounded-xl py-3 font-bold">Save Configuration</button>
-<button id="deleteConfig" class="w-full border border-red-400/40 text-red-300 rounded-xl py-3">Remove Saved Configuration</button>
-<p id="adminMessage" class="muted text-sm break-words"></p>
-<button id="lockAdmin" class="w-full border border-white/15 rounded-xl py-3">Lock Panel</button>
-</div>
-</div>
-</dialog>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getDatabase, ref, get, set, remove } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBgP3wHa3QgNemXhNbEk9nrB_7iR3u6L7s",
-  authDomain: "storage-f2160.firebaseapp.com",
-  databaseURL: "https://storage-f2160-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "storage-f2160",
-  storageBucket: "storage-f2160.firebasestorage.app",
-  messagingSenderId: "260346142452",
-  appId: "1:260346142452:web:22030140d8a91d28ee08a1"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const $ = id => document.getElementById(id);
-
-let razorpayKey = "";
-let backendBase = "";
-let adminUnlocked = false;
-
-$("year").textContent = new Date().getFullYear();
-
-function money(n) {
-  return "₹" + n.toLocaleString("en-IN", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-}
-
-function updateBonus() {
-  const amount = Number($("amount").value);
-  const base = Number.isFinite(amount) && amount > 0 ? amount : 0;
-  const bonus = Math.round(base * 20) / 100;
-
-  $("baseAmount").textContent = money(base);
-  $("bonusAmount").textContent = "+" + money(bonus);
-  $("totalAmount").textContent = money(base + bonus);
-}
-
-$("amount").addEventListener("input", updateBonus);
-
-function showMessage(message, type = "info") {
-  const el = $("message");
-  el.textContent = message;
-  el.className = "rounded-xl p-4 text-sm break-words";
-
-  const styles = {
-    info: ["bg-blue-400/10", "text-blue-200", "border", "border-blue-400/20"],
-    success: ["bg-emerald-400/10", "text-emerald-200", "border", "border-emerald-400/20"],
-    error: ["bg-red-400/10", "text-red-200", "border", "border-red-400/20"]
-  };
-
-  el.classList.add(...styles[type]);
-}
-
-function validBackend() {
-  return Boolean(backendBase && /^https:\/\//i.test(backendBase));
-}
-
-async function loadConfig() {
-  try {
-    const snapshot = await get(ref(db, "payvault/config"));
-    if (snapshot.exists()) {
-      const config = snapshot.val();
-      razorpayKey = typeof config.razorpayKeyId === "string" ? config.razorpayKeyId : "";
-      backendBase = typeof config.backendBaseUrl === "string" ? config.backendBaseUrl.replace(/\/+$/, "") : "";
-      $("keyId").value = razorpayKey;
-      $("backendUrl").value = backendBase;
-    }
-  } catch (e) {
-    console.error("Configuration loading failed", e);
-  }
-}
-
-$("adminOpen").onclick = () => {
-  adminUnlocked = false;
-  $("loginForm").classList.remove("hidden");
-  $("adminPanel").classList.add("hidden");
-  $("loginMessage").textContent = "";
-  $("passkey").value = "";
-  $("adminDialog").showModal();
-};
-
-$("adminClose").onclick = () => $("adminDialog").close();
-
-$("loginForm").onsubmit = e => {
-  e.preventDefault();
-
-  if ($("passkey").value === "SS620631") {
-    adminUnlocked = true;
-    $("loginForm").classList.add("hidden");
-    $("adminPanel").classList.remove("hidden");
-    $("adminMessage").textContent = "Unlocked for this browser session.";
-  } else {
-    $("loginMessage").textContent = "Incorrect passkey.";
-  }
-};
-
-$("saveConfig").onclick = async () => {
-  if (!adminUnlocked) return;
-
-  const key = $("keyId").value.trim();
-  const backend = $("backendUrl").value.trim().replace(/\/+$/, "");
-
-  if (!/^rzp_(live|test)_[A-Za-z0-9]+$/.test(key)) {
-    $("adminMessage").textContent = "Enter a validly formatted Razorpay Key ID.";
-    return;
-  }
-
-  if (!/^https:\/\//i.test(backend)) {
-    $("adminMessage").textContent = "Enter your HTTPS backend URL first.";
-    return;
-  }
-
-  try {
-    await set(ref(db, "payvault/config"), {
-      razorpayKeyId: key,
-      backendBaseUrl: backend
-    });
-
-    razorpayKey = key;
-    backendBase = backend;
-    $("adminMessage").textContent = "Configuration saved to Firebase.";
-  } catch (e) {
-    console.error(e);
-    $("adminMessage").textContent = "Save failed. Check Firebase security rules.";
-  }
-};
-
-$("deleteConfig").onclick = async () => {
-  if (!adminUnlocked || !confirm("Delete saved configuration?")) return;
-
-  try {
-    await remove(ref(db, "payvault/config"));
-    razorpayKey = "";
-    backendBase = "";
-    $("keyId").value = "";
-    $("backendUrl").value = "";
-    $("adminMessage").textContent = "Configuration deleted.";
-  } catch (e) {
-    $("adminMessage").textContent = "Delete failed. Check Firebase security rules.";
-  }
-};
-
-$("lockAdmin").onclick = () => {
-  adminUnlocked = false;
-  $("adminPanel").classList.add("hidden");
-  $("loginForm").classList.remove("hidden");
-  $("passkey").value = "";
-};
-
-async function backendRequest(path, body) {
-  if (!validBackend()) {
-    throw new Error("Backend is not configured. Add your HTTPS backend URL in Admin Area.");
-  }
-
-  const response = await fetch(backendBase + path, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "omit",
-    body: JSON.stringify(body)
-  });
-
-  const result = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    throw new Error(result.message || "Server request failed.");
-  }
-
-  return result;
-}
-
-$("paymentForm").onsubmit = async e => {
-  e.preventDefault();
-
-  const userId = $("userId").value.trim();
-  const amount = Number($("amount").value);
-  const amountPaise = Math.round(amount * 100);
-  const method = document.querySelector('input[name="method"]:checked').value;
-  const button = $("payButton");
-
-  if (!userId) return showMessage("Enter your App User ID.", "error");
-  if (!Number.isFinite(amount) || amount < 1 || !Number.isSafeInteger(amountPaise)) {
-    return showMessage("Enter a valid amount of at least ₹1.", "error");
-  }
-  if (!razorpayKey) return showMessage("Razorpay Key ID is not configured.", "error");
-  if (!validBackend()) return showMessage("Configure your trusted HTTPS payment backend in Admin Area before checkout.", "error");
-  if (typeof window.Razorpay !== "function") return showMessage("Razorpay Checkout did not load. Check your connection.", "error");
-
-  button.disabled = true;
-  button.textContent = "Creating secure order...";
-
-  try {
-    // Backend must create the order using its private Razorpay Key Secret.
-    const order = await backendRequest("/api/create-order", {
-      userId,
-      amountPaise,
-      currency: "INR"
-    });
-
-    if (!order.orderId || !Number.isSafeInteger(Number(order.amountPaise))) {
-      throw new Error("Backend returned an invalid order.");
-    }
-
-    if (Number(order.amountPaise) !== amountPaise) {
-      throw new Error("Order amount does not match the requested amount.");
-    }
-
-    $("paymentId").value = order.orderId;
-
-    const checkout = new Razorpay({
-      key: razorpayKey,
-      order_id: order.orderId,
-      amount: amountPaise,
-      currency: "INR",
-      name: "PayVault",
-      description: "Wallet Recharge",
-      prefill: {},
-      notes: { appUserId: userId },
-      config: {
-        display: {
-          blocks: {
-            upi: {
-              name: "UPI Payments",
-              instruments: [{ method: "upi" }]
-            },
-            other: {
-              name: "Other Payment Methods",
-              instruments: [
-                { method: "card" },
-                { method: "netbanking" },
-                { method: "wallet" }
-              ]
-            }
-          },
-          sequence: ["block.upi", "block.other"],
-          preferences: { show_default_blocks: true }
-        }
-      },
-      handler: async function (response) {
-        showMessage("Payment submitted. Verifying securely with the server...", "info");
-
-        try {
-          const result = await backendRequest("/api/verify-payment", {
-            orderId: order.orderId,
-            razorpayPaymentId: response.razorpay_payment_id,
-            razorpaySignature: response.razorpay_signature,
-            userId
-          });
-
-          if (result.status === "paid" && result.verified === true) {
-            showMessage("Payment verified successfully. " + (result.message || "Wallet update confirmed."), "success");
-            $("checkResult").textContent = "Verified payment: " + response.razorpay_payment_id;
-            $("paymentId").value = response.razorpay_payment_id;
-          } else {
-            showMessage("Payment is not yet confirmed. Use Check Payment Status to refresh.", "info");
-          }
-        } catch (err) {
-          showMessage("Payment submitted, but verification is pending. Check status again shortly.", "info");
-          console.error(err);
-        }
-      },
-      modal: {
-        ondismiss: function () {
-          showMessage("Checkout closed. If you completed payment, check its status below.", "info");
-        }
-      },
-      theme: { color: "#7c3aed" }
-    });
-
-    checkout.on("payment.failed", function (response) {
-      showMessage("Payment failed or was interrupted. You can check the payment status below.", "error");
-      console.error("Razorpay payment failure", response.error);
-    });
-
-    checkout.open();
-  } catch (err) {
-    showMessage(err.message || "Unable to start payment.", "error");
-  } finally {
-    button.disabled = false;
-    button.textContent = "Pay & Claim Bonus Now →";
-  }
-};
-
-$("checkButton").onclick = async () => {
-  const id = $("paymentId").value.trim();
-  const resultEl = $("checkResult");
-
-  if (!id) {
-    resultEl.textContent = "Enter the Order ID or Payment ID first.";
-    return;
-  }
-
-  if (!validBackend()) {
-    resultEl.textContent = "Payment status checking requires your HTTPS backend.";
-    return;
-  }
-
-  const button = $("checkButton");
-  button.disabled = true;
-  resultEl.textContent = "Checking with the server...";
-
-  try {
-    const result = await backendRequest("/api/check-payment", { paymentId: id });
-
-    if (result.verified === true && result.status === "paid") {
-      resultEl.textContent = "Payment SUCCESSFUL and verified. " + (result.message || "");
-    } else if (result.status === "pending") {
-      resultEl.textContent = "Payment is pending. Please check again later.";
-    } else if (result.status === "failed") {
-      resultEl.textContent = "Payment FAILED. No bonus should be credited.";
-    } else {
-      resultEl.textContent = "Payment is not verified. Contact support if money was deducted.";
-    }
-  } catch (err) {
-    resultEl.textContent = err.message || "Could not check payment status.";
-  } finally {
-    button.disabled = false;
-  }
-};
-
-updateBonus();
-loadConfig();
+<input id="qrFile" type="file" accept="image/*" capture="environment" class="hide">
+<script>
+/* PayVault single-file frontend. For real use, deploy a secure backend and configure its URL in Admin > Backend / API. */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const STORAGE={products:'pv_products_v1',orders:'pv_orders_v1',settings:'pv_settings_v1',config:'pv_backend_v1',cart:'pv_cart_v1'};
+const DEMO_ADMIN_PASSWORD='SS620631';
+const defaultProducts=[
+{id:'p1',name:'Sample Product',price:499,stock:10,image:'',description:'Replace or edit this sample product in Admin.'},
+{id:'p2',name:'Premium Item',price:899,stock:5,image:'',description:'A second sample product for testing.'}
+];
+let products=load(STORAGE.products,defaultProducts),orders=load(STORAGE.orders,[]),settings=load(STORAGE.settings,{storeName:'PayVault',currency:'INR',taxRate:0,storeEmail:'',storeAddress:''}),backend=load(STORAGE.config,{apiBase:'',keyId:'',lookupApi:''}),cart=load(STORAGE.cart,{}),adminUnlocked=false,selectedOrder=null,qrMode='lookup';
+function load(k,f){try{const x=localStorage.getItem(k);return x?JSON.parse(x):structuredClone(f)}catch{return structuredClone(f)}}
+function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function money(v){return new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR'}).format(Number(v)||0)}
+function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function notice(msg,type=''){const el=$('#globalNotice');el.className='notice '+type;el.textContent=msg;el.classList.remove('hide');setTimeout(()=>el.classList.add('hide'),6500)}
+function cartRows(){return products.filter(p=>(cart[p.id]||0)>0).map(p=>({...p,qty:Math.min(Number(cart[p.id])||0,Math.max(0,Number(p.stock)||0))})).filter(p=>p.qty>0)}
+function totals(){const subtotal=cartRows().reduce((n,p)=>n+p.price*p.qty,0),tax=subtotal*(Number(settings.taxRate)||0)/100;return{subtotal,tax,total:subtotal+tax}}
+function renderProducts(){$('#brandName').textContent=settings.storeName||'PayVault';$('#productGrid').innerHTML=products.length?products.map(p=>`<article class="card"><img class="product-img" src="${escapeHtml(p.image||'')}" alt="${escapeHtml(p.name)}" onerror="this.style.display='none'"><div class="product-body"><h3>${escapeHtml(p.name)}</h3><div class="muted" style="font-size:13px;min-height:36px">${escapeHtml(p.description||'')}</div><div class="row" style="margin:12px 0"><span class="price">${money(p.price)}</span><span class="pill">${Number(p.stock)||0} in stock</span></div><button style="width:100%" onclick="addToCart('${p.id}')" ${p.stock<=0?'disabled':''}>Add to cart</button></div></article>`).join(''):'<div class="notice">No products yet. Admin can add products.</div>';renderCart()}
+function addToCart(id){const p=products.find(x=>x.id===id);if(!p)return;if((cart[id]||0)>=p.stock){notice('Maximum available stock is already in your cart.','warn');return}cart[id]=(cart[id]||0)+1;save(STORAGE.cart,cart);renderCart()}
+function changeQty(id,d){const p=products.find(x=>x.id===id);if(!p)return;cart[id]=Math.max(0,Math.min(p.stock,(cart[id]||0)+d));if(!cart[id])delete cart[id];save(STORAGE.cart,cart);renderCart()}
+function renderCart(){const rows=cartRows();$('#cartItems').innerHTML=rows.length?rows.map(p=>`<div class="cart-item row"><div style="min-width:0"><strong>${escapeHtml(p.name)}</strong><div class="small">${money(p.price)} each</div></div><div class="qty"><button class="secondary" onclick="changeQty('${p.id}',-1)">−</button><strong>${p.qty}</strong><button class="secondary" onclick="changeQty('${p.id}',1)">+</button></div><strong>${money(p.price*p.qty)}</strong></div>`).join(''):'<div class="notice">Your cart is empty. Add a product to continue.</div>';const t=totals();$('#cartTotal').textContent=money(t.subtotal);$('#taxAmount').textContent=money(t.tax);$('#checkoutTotal').textContent=money(t.total);$('#payBtn').disabled=!rows.length}
+function makeId(){return 'PV-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,7).toUpperCase()}
+function setOrder(o){selectedOrder=o;renderOrderPanel(o)}
+function renderOrderPanel(o){const box=$('#orderPanel');if(!o){box.innerHTML='<div class="notice">No order selected yet.</div>';return}box.innerHTML=`<div class="row"><strong>${escapeHtml(o.id)}</strong><span class="pill">${escapeHtml(o.orderStatus||'Pending')}</span></div><div class="notice">Payment: <b>${escapeHtml(o.paymentStatus||'Pending')}</b><br>Order: <b>${escapeHtml(o.orderStatus||'Pending')}</b><br>Total: <b>${money(o.total)}</b></div><div class="small">Customer: ${escapeHtml(o.name)} · ${escapeHtml(o.email)}</div><div class="qr-area" id="customerQr"><div style="color:#222;text-align:center">Order QR<br><small>QR is generated after backend order creation.</small></div></div><div class="actions"><button class="secondary" onclick="downloadInvoice('${o.id}')">Download invoice PDF</button><button class="secondary" onclick="printOrder('${o.id}')">Print</button></div><div class="small">Created: ${new Date(o.createdAt).toLocaleString()}</div>${o.expiresAt&&o.paymentStatus==='Pending'?`<div class="notice warn" id="expiryText">Payment session expires at ${new Date(o.expiresAt).toLocaleTimeString()}</div>`:''}`;makeOrderQr(o)}
+function makeOrderQr(o){const target=$('#customerQr');if(!target)return;const data=JSON.stringify({orderId:o.id,lookup:backend.lookupApi||((backend.apiBase||'')+'/api/orders/'+encodeURIComponent(o.id))});const img=document.createElement('img');img.alt='Order QR';img.src='https://api.qrserver.com/v1/create-qr-code/?size=240x240&data='+encodeURIComponent(data);img.onerror=()=>{target.innerHTML='<div style="color:#222;text-align:center">QR image service unavailable.<br>Order ID: '+escapeHtml(o.id)+'</div>'};target.innerHTML='';target.appendChild(img)}
+async function api(path,opts={}){if(!backend.apiBase)throw new Error('Backend API URL is not configured. This is a frontend-only demo.');const url=backend.apiBase.replace(/\/+$/,'')+path;const res=await fetch(url,{...opts,headers:{'Content-Type':'application/json',...(opts.headers||{})}});const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.message||`API error ${res.status}`);return data}
+$('#checkoutForm').addEventListener('submit',async e=>{e.preventDefault();const rows=cartRows();if(!rows.length)return notice('Add at least one product.','warn');const f=new FormData(e.currentTarget),t=totals();const order={id:makeId(),name:f.get('name').trim(),email:f.get('email').trim(),phone:f.get('phone').trim(),address:f.get('address').trim(),notes:f.get('notes').trim(),items:rows.map(p=>({id:p.id,name:p.name,price:p.price,qty:p.qty})),subtotal:t.subtotal,tax:t.tax,total:t.total,currency:'INR',paymentStatus:'Pending',orderStatus:'Pending',createdAt:new Date().toISOString(),expiresAt:new Date(Date.now()+10*60*1000).toISOString(),demo:true};$('#payBtn').disabled=true;try{if(backend.apiBase){const r=await api('/api/create-order',{method:'POST',body:JSON.stringify(order)});Object.assign(order,r.order||r,{demo:false});if(r.checkoutUrl){orders.unshift(order);save(STORAGE.orders,orders);cart={};save(STORAGE.cart,cart);renderProducts();setOrder(order);location.href=r.checkoutUrl;return}if(r.razorpayOrderId&&backend.keyId&&window.Razorpay){const options={key:backend.keyId,amount:r.amount||Math.round(t.total*100),currency:r.currency||'INR',name:settings.storeName||'PayVault',description:'Order '+order.id,order_id:r.razorpayOrderId,prefill:{name:order.name,email:order.email,contact:order.phone},handler:async response=>{try{const verified=await api('/api/verify-payment',{method:'POST',body:JSON.stringify({orderId:order.id,...response})});Object.assign(order,verified.order||{}, {paymentStatus:'Successful'});notice('Payment verified by backend.','good')}catch(err){notice('Payment verification pending: '+err.message,'warn')}upsertOrder(order);setOrder(order)},modal:{ondismiss:()=>notice('Payment window closed. Check order status before retrying.','warn')}};new Razorpay(options).open();return}Object.assign(order,r.order||r,{demo:false});upsertOrder(order);setOrder(order);notice('Order created on backend. Complete payment using the backend payment link or configured checkout.','good')}else{orders.unshift(order);save(STORAGE.orders,orders);setOrder(order);notice('Demo order created locally. No real payment has been taken. Connect a backend for Razorpay payment verification and automatic email.','warn')}cart={};save(STORAGE.cart,cart);renderProducts()}catch(err){notice(err.message,'bad')}finally{$('#payBtn').disabled=!cartRows().length}});
+function upsertOrder(o){const i=orders.findIndex(x=>x.id===o.id);if(i>=0)orders[i]={...orders[i],...o};else orders.unshift(o);save(STORAGE.orders,orders);renderAdminStats();renderOrdersTable()}
+$('#lookupForm').addEventListener('submit',async e=>{e.preventDefault();await lookupOrder($('#lookupId').value.trim())});
+async function lookupOrder(id){if(!id)return;let o=orders.find(x=>x.id.toLowerCase()===id.toLowerCase());if(backend.apiBase){try{const r=await api('/api/orders/'+encodeURIComponent(id));o=r.order||r;upsertOrder(o)}catch(err){if(!o){notice(err.message,'warn');return}}}if(!o){notice('Order not found.','bad');return}setOrder(o);$('#lookupId').value=o.id;notice('Order details loaded.','good')}
+function printOrder(id){const o=orders.find(x=>x.id===id)||selectedOrder;if(!o)return;const w=window.open('','_blank');if(!w)return notice('Allow pop-ups to print the invoice.','warn');w.document.write(invoiceHtml(o));w.document.close();w.focus();w.print()}
+function invoiceHtml(o){return `<!doctype html><html><head><meta charset="utf-8"><title>Invoice ${escapeHtml(o.id)}</title><style>body{font:14px Arial;padding:35px;color:#111}h1{margin-bottom:4px}table{width:100%;border-collapse:collapse;margin-top:22px}td,th{border-bottom:1px solid #ddd;padding:9px;text-align:left}.right{text-align:right}</style></head><body><h1>${escapeHtml(settings.storeName||'PayVault')}</h1><div>${escapeHtml(settings.storeAddress||'')}</div><h2>Invoice / Order receipt</h2><p>Order ID: ${escapeHtml(o.id)}<br>Date: ${new Date(o.createdAt).toLocaleString()}<br>Customer: ${escapeHtml(o.name)}<br>Email: ${escapeHtml(o.email)}<br>Mobile: ${escapeHtml(o.phone)}<br>Address: ${escapeHtml(o.address)}</p><table><thead><tr><th>Item</th><th>Qty</th><th>Unit price</th><th class="right">Amount</th></tr></thead><tbody>${(o.items||[]).map(i=>`<tr><td>${escapeHtml(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td class="right">${money(i.price*i.qty)}</td></tr>`).join('')}</tbody></table><p class="right">Subtotal: ${money(o.subtotal)}<br>Tax: ${money(o.tax)}<br><strong>Total: ${money(o.total)}</strong></p><p>Payment status: ${escapeHtml(o.paymentStatus||'Pending')}<br>Order status: ${escapeHtml(o.orderStatus||'Pending')}</p><p>Thank you for your order.</p></body></html>`}
+function downloadInvoice(id){const o=orders.find(x=>x.id===id)||selectedOrder;if(!o)return;const html=invoiceHtml(o);const blob=new Blob([html],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`PayVault-${o.id}-invoice.html`;a.click();URL.revokeObjectURL(a.href);notice('Invoice receipt downloaded as HTML. Use Print > Save as PDF to create a PDF.','good')}
+$('#adminOpenBtn').onclick=()=>{$('#adminSection').classList.remove('hide');$('#adminSection').scrollIntoView({behavior:'smooth'})};$('#adminCloseBtn').onclick=()=>$('#adminSection').classList.add('hide');
+$('#adminLoginForm').addEventListener('submit',e=>{e.preventDefault();if($('#adminPassword').value!==DEMO_ADMIN_PASSWORD)return notice('Incorrect demo password.','bad');adminUnlocked=true;$('#adminLogin').classList.add('hide');$('#adminApp').classList.remove('hide');renderAdmin()});
+function renderAdmin(){renderAdminStats();renderOrdersTable();renderAdminProducts();const f=$('#settingsForm');Object.entries(settings).forEach(([k,v])=>{if(f.elements[k])f.elements[k].value=v??''});const b=$('#backendForm');Object.entries(backend).forEach(([k,v])=>{if(b.elements[k])b.elements[k].value=v??''})}
+function renderAdminStats(){$('#statProducts').textContent=products.length;$('#statOrders').textContent=orders.length;$('#statCompleted').textContent=orders.filter(o=>o.orderStatus==='Completed').length}
+function renderOrdersTable(){$('#ordersTable').innerHTML=orders.length?orders.map(o=>`<tr><td><b>${escapeHtml(o.id)}</b><br><span class="small">${new Date(o.createdAt).toLocaleDateString()}</span></td><td>${escapeHtml(o.name)}<br><span class="small">${escapeHtml(o.email)}</span></td><td>${money(o.total)}</td><td><span class="pill">${escapeHtml(o.paymentStatus||'Pending')}</span></td><td><span class="pill">${escapeHtml(o.orderStatus||'Pending')}</span></td><td><div class="actions"><button class="secondary" onclick="adminViewOrder('${o.id}')">View</button><button onclick="completeOrder('${o.id}')" ${o.orderStatus==='Completed'?'disabled':''}>Order Successful</button></div></td></tr>`).join(''):'<tr><td colspan="6">No orders yet.</td></tr>'}
+function adminViewOrder(id){const o=orders.find(x=>x.id===id);if(o){setOrder(o);$('#orderPanel').scrollIntoView({behavior:'smooth'})}}
+async function completeOrder(id){let o=orders.find(x=>x.id===id);if(!o)return;if(o.paymentStatus!=='Successful'&&!confirm('Payment is not verified as successful. Marking order completed does NOT prove payment. Continue only if you physically verified the order/payment outside this demo.'))return;try{if(backend.apiBase){const r=await api('/api/orders/'+encodeURIComponent(id)+'/complete',{method:'POST',body:JSON.stringify({})});o={...o,...(r.order||r),orderStatus:'Completed'}}else{o={...o,orderStatus:'Completed',completedAt:new Date().toISOString(),qrInvalid:true}}upsertOrder(o);setOrder(o);notice('Order marked completed. Its QR must be rejected by your backend on future scans.','good');if(backend.apiBase){try{await api('/api/orders/'+encodeURIComponent(id)+'/email-invoice',{method:'POST',body:JSON.stringify({})});notice('Order completed; backend invoice-email request sent.','good')}catch(err){notice('Order completed, but invoice email failed: '+err.message,'warn')}}}catch(err){notice(err.message,'bad')}}
+function renderAdminProducts(){$('#adminProductsTable').innerHTML=products.map(p=>`<tr><td>${escapeHtml(p.name)}</td><td>${money(p.price)}</td><td>${p.stock}</td><td><div class="actions"><button class="secondary" onclick="editProduct('${p.id}')">Edit</button><button class="danger" onclick="deleteProduct('${p.id}')">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="4">No products.</td></tr>'}
+function editProduct(id){const p=products.find(x=>x.id===id);if(!p)return;const f=$('#productForm');Object.entries(p).forEach(([k,v])=>{if(f.elements[k])f.elements[k].value=v});$('#productForm').scrollIntoView({behavior:'smooth'})}
+function deleteProduct(id){if(!confirm('Delete this product?'))return;products=products.filter(p=>p.id!==id);delete cart[id];save(STORAGE.products,products);save(STORAGE.cart,cart);renderProducts();renderAdminProducts();renderAdminStats()}
+$('#productForm').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.currentTarget),id=f.get('id')||('p'+Date.now()),p={id,name:f.get('name').trim(),price:Number(f.get('price')),stock:Math.floor(Number(f.get('stock'))),image:f.get('image').trim(),description:f.get('description').trim()};if(!Number.isFinite(p.price)||p.price<0||p.stock<0)return notice('Enter a valid price and stock.','warn');const i=products.findIndex(x=>x.id===id);if(i>=0)products[i]=p;else products.push(p);save(STORAGE.products,products);e.currentTarget.reset();e.currentTarget.elements.id.value='';renderProducts();renderAdminProducts();renderAdminStats();notice('Product saved in this browser.','good')});
+$('#resetProduct').onclick=()=>{$('#productForm').reset();$('#productForm').elements.id.value=''};
+$('#settingsForm').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.currentTarget);settings={storeName:f.get('storeName').trim(),currency:'INR',taxRate:Number(f.get('taxRate'))||0,storeEmail:f.get('storeEmail').trim(),storeAddress:f.get('storeAddress').trim()};save(STORAGE.settings,settings);renderProducts();notice('Store settings saved in this browser.','good')});
+$('#backendForm').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.currentTarget);backend={apiBase:f.get('apiBase').trim().replace(/\/+$/,''),keyId:f.get('keyId').trim(),lookupApi:f.get('lookupApi').trim()};save(STORAGE.config,backend);notice('Backend connection settings saved in this browser.','good')});
+$('#testBackend').onclick=async()=>{try{const r=await fetch(backend.apiBase.replace(/\/+$/,'')+'/health');if(!r.ok)throw new Error('Health endpoint returned '+r.status);$('#backendStatus').textContent='Backend reachable: '+await r.text()}catch(e){$('#backendStatus').textContent='Could not verify backend: '+e.message+' (Set a valid API URL and provide a /health endpoint.)'}};
+$$('[data-tab]').forEach(b=>b.onclick=()=>{$$('.admin-tabs [data-tab]').forEach(x=>x.classList.toggle('active',x===b));['orders','products','settings','backend'].forEach(t=>$('#tab-'+t).classList.toggle('hide',t!==b.dataset.tab))});
+$('#exportOrders').onclick=()=>{const head=['Order ID','Name','Email','Phone','Address','Total','Payment Status','Order Status','Created'];const lines=[head,...orders.map(o=>[o.id,o.name,o.email,o.phone,o.address,o.total,o.paymentStatus,o.orderStatus,o.createdAt])].map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines],{type:'text/csv'}));a.download='payvault-orders.csv';a.click();URL.revokeObjectURL(a.href)};
+function startScan(){qrMode='lookup';$('#qrFile').click()}
+$('#topScanBtn').onclick=startScan;$('#scanFromAdmin').onclick=startScan;
+$('#qrFile').addEventListener('change',async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;notice('QR image selected. This single HTML file does not include a QR decoding library. Use a camera/QR scanner app to read it, then paste the Order ID into Find an order. For in-site scanning, add a QR decoding library or backend scanner.','warn')});
+$('#browseBtn').onclick=()=>$('#shopSection').scrollIntoView({behavior:'smooth'});$('#viewOrderBtn').onclick=()=>$('#lookupId').focus();$('#refreshProducts').onclick=()=>{products=load(STORAGE.products,defaultProducts);renderProducts();notice('Products refreshed from this browser storage.','good')};
+window.addToCart=addToCart;window.changeQty=changeQty;window.downloadInvoice=downloadInvoice;window.printOrder=printOrder;window.adminViewOrder=adminViewOrder;window.completeOrder=completeOrder;window.editProduct=editProduct;window.deleteProduct=deleteProduct;
+renderProducts();renderOrderPanel(null);
 </script>
-</body>
-</html>
+</body></html>
